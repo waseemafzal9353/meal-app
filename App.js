@@ -5,8 +5,18 @@ import React, { useState } from "react";
 import { AppLoading } from "expo";
 import MealsNavigator from "./navigation/MealsNavigation";
 import { enableScreens } from "react-native-screens";
+import { combineReducers, createStore } from "redux";
+import mealsReducer from "./store/reducers/meals";
+import { Provider } from "react-redux";
 
-enableScreens()
+enableScreens();
+
+const rootReducer = combineReducers({
+  meals: mealsReducer,
+});
+
+const store = createStore(rootReducer);
+
 const fetchFonts = () => {
   return Font.loadAsync({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -26,7 +36,11 @@ export default function App() {
       />
     );
   }
-  return <MealsNavigator />;
+  return (
+    <Provider store={store}>
+      <MealsNavigator />
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({
